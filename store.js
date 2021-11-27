@@ -89,7 +89,6 @@ function addItemToCart(title, price, image) {
     if (cartItemName.length = 1) {
         total();
     }
-
 }
 
 function updateCartTotal() {
