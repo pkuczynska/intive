@@ -53,9 +53,7 @@ const removeCartItem = (event) => {
         if (basket.length === 0) {
             totalBack()
         }
-
     })
-
 }
 
 const quantityChanged = (event) => {
@@ -63,8 +61,6 @@ const quantityChanged = (event) => {
     if (!(input.value) || input.value <= 0) {
         input.value = 1
     }
-    updateCartTotal()
-
     const basket = getLocalStorage('basket')
     let count
     const getTitleCartItem = input.parentElement.parentElement
@@ -82,6 +78,7 @@ const quantityChanged = (event) => {
         })
         setLocalStorage('basket', basketCount)
     })
+    updateCartTotal()
 }
 
 const addItemToBasket = (event) => {
@@ -100,7 +97,7 @@ const addItemToBasket = (event) => {
         setLocalStorage('basket', tempData)
     } else {
         let countFirst = false
-        getActualLocalStorage.map(el => {
+        getActualLocalStorage.forEach(el => {
             if (title === el.title) {
                 el.count += 1
                 countFirst = true
@@ -148,15 +145,12 @@ const addItemToCart = (title, price, count) => {
 }
 
 const updateCartTotal = () => {
-    const cartItemsContainer = document.getElementsByClassName('cart-items')[0]
-    const cartRows = cartItemsContainer.getElementsByClassName('cart-row')
+    const basket = getLocalStorage('basket')
     let total = 0
-    Array.from(cartRows).map((el, index) => {
-        let cartRow = cartRows[index]
-        const priceElement = cartRow.getElementsByClassName('cart-price')[0]
-        const quantityElement = cartRow.getElementsByClassName('cart-quantity-input')[0]
-        let price = parseFloat(priceElement.textContent.replace('$', ''))
-        let quantity = quantityElement.value
+    Array.from(basket).map((el) => {
+        let price = el.price
+        price = price.replace(' zł', '');
+        let quantity = el.count
         total = total + (price * quantity)
     })
     total = Math.round(total * 100) / 100;

@@ -108,7 +108,6 @@ div.shop-item-details .shop-item-button {
     color: #FFFFFF;
     margin-top: 5px;
     cursor: pointer;
-
 }
 
 div.cart-row {
@@ -130,7 +129,6 @@ div.cart-row span {
 .cart-quantity-input {
     width: 40px;
     border-style: groove;
-
 }
 
 .btn-removeItemCard {
@@ -287,6 +285,4 @@ div.scroll-top .fa-shopping-basket {
     .cart-total-price {
         font-size: 20px;
     }
-
-
 }
