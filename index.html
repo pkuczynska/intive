@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <title>Store</title>
+    <link rel="stylesheet" href="styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="store.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <section class="content-section">
+            <h2 class="section-header">Wybierz pizze</h2>
+            <div class="input-filtr">
+                <input type="text" id="filtr" class="filtr-basket" onkeyup="filtr()" placeholder="Szukaj składników po przecinku ze spacją" />
+            </div>
+            <div class="sort">
+                <button class="sort-by-title btn-sort">Nazwa rosnąco</button>
+                <button class="sort-by-title-reverse btn-sort">Nazwa malejąco</button>
+                <button class="sort-by-price btn-sort">Cena rosnąco</button>
+                <button class="sort-by-price-reverse btn-sort">Cena malejąco</button>
+            </div>
+            <div class="shop-items" id="shop-items"></div>
+            <div class="scroll-top"><button><i class="fa fa-shopping-basket"></i></button>
+            </div>
+        </section>
+        <section class="content-section cart-section">
+            <hr>
+            <h2 class="section-header">Koszyk</h2>
+            <div class="cart-row">
+                <span class="cart-item cart-header cart-column">PIZZA</span>
+                <span class="cart-price cart-header cart-column">CENA</span>
+                <span class="cart-quantity cart-header cart-column">ILOŚĆ</span>
+            </div>
+            <div class="cart-items">
+            </div>
+            <div class="cart-total">
+                <strong class="cart-total-title">Głodny? Zamów pizze!</strong>
+                <span class="cart-total-price"></span>
+            </div>
+            <button class="btn btn-primary btn-purchase" type="button">Zamów</button>
+            <button class="btn btn-primary remove-basket" type="button">Wyczyść koszyk</button>
+        </section>
+    </div>
+</body>
+
+</html>
