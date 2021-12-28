@@ -70,6 +70,7 @@ section div.shop-items {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-left: 20px;
 }
 
 div.shop-items div.shop-item {
@@ -108,7 +109,6 @@ div.shop-item-details .shop-item-button {
     color: #FFFFFF;
     margin-top: 5px;
     cursor: pointer;
-
 }
 
 div.cart-row {
@@ -130,7 +130,6 @@ div.cart-row span {
 .cart-quantity-input {
     width: 40px;
     border-style: groove;
-
 }
 
 .btn-removeItemCard {
@@ -180,7 +179,7 @@ section.cart-section .cart-row:last-child {
 }
 
 .shop-item {
-    margin-bottom: 30px;
+    margin: 30px 30px;
 }
 
 section.cart-section .btn-purchase,
@@ -194,26 +193,9 @@ div.shop-item-details div.row {
     flex-direction: column;
 }
 
-section div.scroll-top {
-    position: fixed;
-    right: 30px;
-    bottom: 30px;
-}
-
-div.scroll-top button {
-    font-size: 30px;
-    cursor: pointer;
-    background: #FFFFFF;
-    box-shadow: 2px 4px 6px -2px rgba(0, 0, 0, 0.25);
-}
-
-div.scroll-top .fa-shopping-basket {
-    color: #6CB986;
-}
-
-@media only screen and (min-width: 426px) {
+@media only screen and (min-width: 768px) {
     .content-section:first-child {
-        width: 70%;
+        width: 60%;
         padding: 0 40px;
     }
 
@@ -287,6 +269,4 @@ div.scroll-top .fa-shopping-basket {
     .cart-total-price {
         font-size: 20px;
     }
-
-
 }

@@ -53,9 +53,7 @@ const removeCartItem = (event) => {
         if (basket.length === 0) {
             totalBack()
         }
-
     })
-
 }
 
 const quantityChanged = (event) => {
@@ -63,8 +61,6 @@ const quantityChanged = (event) => {
     if (!(input.value) || input.value <= 0) {
         input.value = 1
     }
-    updateCartTotal()
-
     const basket = getLocalStorage('basket')
     let count
     const getTitleCartItem = input.parentElement.parentElement
@@ -82,6 +78,7 @@ const quantityChanged = (event) => {
         })
         setLocalStorage('basket', basketCount)
     })
+    updateCartTotal()
 }
 
 const addItemToBasket = (event) => {
@@ -100,7 +97,7 @@ const addItemToBasket = (event) => {
         setLocalStorage('basket', tempData)
     } else {
         let countFirst = false
-        getActualLocalStorage.map(el => {
+        getActualLocalStorage.forEach(el => {
             if (title === el.title) {
                 el.count += 1
                 countFirst = true
@@ -148,15 +145,12 @@ const addItemToCart = (title, price, count) => {
 }
 
 const updateCartTotal = () => {
-    const cartItemsContainer = document.getElementsByClassName('cart-items')[0]
-    const cartRows = cartItemsContainer.getElementsByClassName('cart-row')
+    const basket = getLocalStorage('basket')
     let total = 0
-    Array.from(cartRows).map((el, index) => {
-        let cartRow = cartRows[index]
-        const priceElement = cartRow.getElementsByClassName('cart-price')[0]
-        const quantityElement = cartRow.getElementsByClassName('cart-quantity-input')[0]
-        let price = parseFloat(priceElement.textContent.replace('$', ''))
-        let quantity = quantityElement.value
+    Array.from(basket).map((el) => {
+        let price = el.price
+        price = price.replace(' zł', '');
+        let quantity = el.count
         total = total + (price * quantity)
     })
     total = Math.round(total * 100) / 100;
@@ -178,106 +172,104 @@ const totalBack = () => {
 
 const showShopItem = async () => {
     const url = 'https://raw.githubusercontent.com/alexsimkovich/patronage/main/api/data.json'
-    let response = await fetch(url)
+    const response = await fetch(url)
     let data = await response.json()
     return data
 }
 
-const filtr = () => {
+const filter = () => {
     const input = document.getElementById("filtr")
     let filter = input.value
-    const cardContainer = document.getElementById("shop-items")
-    const cards = cardContainer.getElementsByClassName("shop-item")
-    Array.from(cards).map((el) => {
-        const ingredients = el.querySelector(".shop-item-ingredients")
-        if (ingredients.textContent.indexOf(filter) > -1) {
-            el.style.display = ""
-        } else {
-            el.style.display = "none"
-        }
+    filter = filter.split(',')
+    const list = document.getElementsByClassName("shop-item")
+    Array.from(list).map((el) => {
+        el.remove()
+    })
+    showShopItem().then((res) => {
+        let filteredList = res.filter((value) => {
+            return JSON.stringify(value.ingredients).includes(JSON.stringify(filter))
+        });
+        handlePizza(filteredList)
+        eventItemToBasket()
+
+    })  
+}
+
+
+const sortByTitle = () => {
+    const list = document.getElementsByClassName("shop-item")
+    Array.from(list).map((el) => {
+        el.remove()
+    })
+    showShopItem().then((res) => {
+        res.sort((a, b) => {
+            if (a.title < b.title)
+                return -1;
+            if (a.title > b.title)
+                return 1;
+            return 0;
+
+        })
+        handlePizza(res)
+        eventItemToBasket()
     })
 }
 
-const sortByTitle = () => {
-    const list = document.getElementById("shop-items")
-    let switching = true
-    while (switching) {
-        switching = false
-        const cartItem = list.getElementsByClassName("shop-item")
-        for (var i = 0; i < (cartItem.length - 1); i++) {
-            var shouldSwitch = false
-            if (cartItem[i].textContent > cartItem[i + 1].textContent) {
-                shouldSwitch = true
-                break
-            }
-        }
-        if (shouldSwitch) {
-            cartItem[i].parentNode.insertBefore(cartItem[i + 1], cartItem[i])
-            switching = true
-        }
-    }
-}
-
 const sortByTitleReverse = () => {
-    const list = document.getElementById("shop-items")
-    let switching = true;
-    while (switching) {
-        switching = false
-        const cartItem = list.getElementsByClassName("shop-item");
-        for (var i = 0; i < (cartItem.length - 1); i++) {
-            var shouldSwitch = false
-            if (cartItem[i].textContent < cartItem[i + 1].textContent) {
-                shouldSwitch = true
-                break
-            }
-        }
-        if (shouldSwitch) {
-            cartItem[i].parentNode.insertBefore(cartItem[i + 1], cartItem[i])
-            switching = true
-        }
-    }
+    const list = document.getElementsByClassName("shop-item")
+    Array.from(list).map((el) => {
+        el.remove()
+    })
+    showShopItem().then((res) => {
+        res.sort((a, b) => {
+            if (a.title > b.title)
+                return -1;
+            if (a.title < b.title)
+                return 1;
+            return 0;
+
+        })
+        handlePizza(res)
+        eventItemToBasket()
+    })
 }
 
 const sortPrice = () => {
-    const list = document.getElementById("shop-items")
-    let switching = true
-    while (switching) {
-        switching = false
-        const cartItem = list.getElementsByClassName("shop-item")
-        const price = list.getElementsByClassName("shop-item-price")
-        for (var i = 0; i < (price.length - 1); i++) {
-            var shouldSwitch = false
-            if (price[i].textContent > price[i + 1].textContent) {
-                shouldSwitch = true
-                break
-            }
-        }
-        if (shouldSwitch) {
-            cartItem[i].parentNode.insertBefore(cartItem[i + 1], cartItem[i])
-            switching = true;
-        }
-    }
+    const list = document.getElementsByClassName("shop-item")
+    Array.from(list).map((el) => {
+        el.remove()
+    })
+    showShopItem().then((res) => {
+        res.sort((a, b) => {
+            if (a.price < b.price)
+                return -1;
+            if (a.price > b.price)
+                return 1;
+            return 0;
+
+        })
+        handlePizza(res)
+        eventItemToBasket()
+    })
 }
 
 const sortPriceReverse = () => {
-    const list = document.getElementById("shop-items")
-    let switching = true
-    while (switching) {
-        switching = false
-        const cartItem = list.getElementsByClassName("shop-item")
-        const price = list.getElementsByClassName("shop-item-price")
-        for (var i = 0; i < (price.length - 1); i++) {
-            var shouldSwitch = false
-            if (price[i].textContent < price[i + 1].textContent) {
-                shouldSwitch = true
-                break
-            }
-        }
-        if (shouldSwitch) {
-            cartItem[i].parentNode.insertBefore(cartItem[i + 1], cartItem[i])
-            switching = true;
-        }
-    }
+    const list = document.getElementsByClassName("shop-item")
+    Array.from(list).map((el) => {
+        el.remove()
+    })
+    showShopItem().then((res) => {
+        res.sort((a, b) => {
+            if (a.price > b.price)
+                return -1;
+            if (a.price < b.price)
+                return 1;
+            return 0;
+
+        })
+        handlePizza(res)
+        eventItemToBasket()
+    })
 }
 
 
@@ -292,25 +284,25 @@ const removeBasket = () => {
 }
 
 const generatePizza = (image, title, ingredients, price) => {
-    return '<div class="shop-item">' +
-        '          <img src="' + image + '" class="shop-item-image" alt="album 1"/>' +
-        '          <div class="shop-item-details">' +
-        '             <span class="shop-item-title">' +
-        '                 ' + title + '' +
-        '             </span>' +
-        '              <div class="row">' +
-        '                  <span class="shop-item-ingredients">' +
-        '                      ' + ingredients + '' +
-        '                  </span>' +
-        '                  <span class="shop-item-price">' +
-        '                      ' + price + '' +
-        '                  </span>' +
-        '              </div>' +
-        '              <div class="row">' +
-        '                  <button class="btn btn-primary shop-item-button" type="button">Dodaj pizze</button>' +
-        '              </div>' +
-        '          </div>' +
-        '      </div>'
+    return `<div class="shop-item"> 
+                  <img src="${image}" class="shop-item-image" alt="album 1"/>
+                  <div class="shop-item-details"> 
+                     <span class="shop-item-title"> 
+                         ${title}
+                     </span>
+                      <div class="row"> 
+                         <span class="shop-item-ingredients"> 
+                             ${ingredients} 
+                          </span> 
+                          <span class="shop-item-price"> 
+                              ${price} 
+                          </span> 
+                      </div> 
+                      <div class="row"> 
+                          <button class="btn btn-primary shop-item-button" type="button">Dodaj pizze</button> 
+                      </div>
+                  </div> 
+              </div>`
 }
 
 const generateIngredients = (data) => {
@@ -329,22 +321,24 @@ const handlePizza = (data) => data.map(el => {
     placePizza.innerHTML += generatePizza(el.image, el.title, generateIngredients(el.ingredients), el.price + ' zł')
 })
 
-const topSroll = () => {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
+const eventItemToBasket = () => {
+    const addToCartButton = document.getElementsByClassName('shop-item-button')
+    Array.from(addToCartButton).map((el) => {
+        el.addEventListener('click', (el) => addItemToBasket(el))
+    })
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    sortByTitle()
     showShopItem().then((res) => {
         if (res) {
-            handlePizza(res)
+            //handlePizza(res)
             document.getElementsByClassName('btn-purchase')[0].addEventListener('click', purchaseFinish)
             document.getElementsByClassName('remove-basket')[0].addEventListener('click', removeBasket)
             document.getElementsByClassName('sort-by-title')[0].addEventListener('click', sortByTitle)
             document.getElementsByClassName('sort-by-title-reverse')[0].addEventListener('click', sortByTitleReverse)
             document.getElementsByClassName('sort-by-price')[0].addEventListener('click', sortPrice)
             document.getElementsByClassName('sort-by-price-reverse')[0].addEventListener('click', sortPriceReverse)
-            document.getElementsByClassName('scroll-top')[0].addEventListener('click', topSroll)
             const removeCartItems = document.getElementsByClassName('btn-removeItemCard')
             Array.from(removeCartItems).map((el) => {
                 el.addEventListener('click', (e) => removeCartItems(e))
@@ -353,11 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Array.from(quantityInputs).map((el) => {
                 el.addEventListener('change', (e) => quantityChanged(e))
             })
-            const addToCartButton = document.getElementsByClassName('shop-item-button')
-            Array.from(addToCartButton).map((el) => {
-                el.addEventListener('click', (e) => addItemToBasket(e))
-            })
-            sortByTitle()
+            eventItemToBasket()
         }
         generateBasket(true)
     })
